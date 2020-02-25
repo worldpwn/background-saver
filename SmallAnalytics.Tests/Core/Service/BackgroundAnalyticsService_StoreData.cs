@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace SmallAnalytics.Tests.Core.Service
@@ -22,31 +23,22 @@ namespace SmallAnalytics.Tests.Core.Service
         }
 
         [Fact]
-        public void MultiThread_AddData_Should_BeInQueue()
+        public async Task MultiThread_AddData_Should_BeInQueue()
         {
-            Thread[] threads = new Thread[12];
+            Task[] Tasks = new Task[12];
 
             BackgroundAnalyticsService backgroundAnalyticsService = new BackgroundAnalyticsService();
             
 
-            for (int i = 0; i < threads.Length; i++)
+            for (int i = 0; i < Tasks.Length; i++)
             {
                 string content = $"some content from thread {i}";
-                threads[i] = new Thread(() => backgroundAnalyticsService.StoreData(DateTimeOffset.UtcNow, content));
+                Tasks[i] = new Task(() => backgroundAnalyticsService.StoreData(DateTimeOffset.UtcNow, content));
             }
 
-            foreach (Thread thread in threads)
-            {
-                thread.Start();
-            }
+            await Task.WhenAll(Tasks);
 
-            foreach (Thread thread in threads)
-            {
-                thread.Join();
-            }
-
-            Assert.NotEmpty(backgroundAnalyticsService.Queue);
-           // Assert.NotNull(backgroundAnalyticsService.Queue.FirstOrDefault(d => d.Content == content));
+            Assert.Equal(11, backgroundAnalyticsService.Queue.Count);
         }
     }
 }
