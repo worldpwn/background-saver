@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmallAnalytics.Core.Data
+namespace SmallAnalytics.MsSQL.Modesl
 {
-    public class AnalyticData
+    public class AnalyticsDataModel
     {
         public Guid Id { get; private set; }
         public DateTimeOffset Date { get; private set; }
         public string Content { get; private set; }
 
-        public AnalyticData(DateTimeOffset date, string content)
+        public AnalyticsDataModel(DateTimeOffset date, string content)
         {
             Id = Guid.NewGuid();
             Date = date;

@@ -1,22 +1,22 @@
-﻿using SmallAnalytics.Core.Data;
+﻿using SmallAnalytics.Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SmallAnalytics.Tests.Core.Data
+namespace SmallAnalytics.Tests.Core.DTO
 {
-    public class AnalyticData_ctor
+    public class AnalyticsDataDTO_ctor
     {
         [Fact]
         public void PassCorrectData_Should_BeOk()
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = "user registered";
-            AnalyticData analyticData = new AnalyticData(date: date, content: content);
+            AnalyticsDataDTO analyticsData = new AnalyticsDataDTO(date: date, content: content);
 
-            Assert.Equal(date, analyticData.Date);
-            Assert.Equal(content, analyticData.Content);
+            Assert.Equal(date, analyticsData.Date);
+            Assert.Equal(content, analyticsData.Content);
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace SmallAnalytics.Tests.Core.Data
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = null;
-            Action action = () => new AnalyticData(date: date, content: content);
+            Action action = () => new AnalyticsDataDTO(date: date, content: content);
 
             Assert.Throws<ArgumentNullException>(action);
         }
@@ -34,9 +34,9 @@ namespace SmallAnalytics.Tests.Core.Data
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = "user registered";
-            AnalyticData analyticDataA = new AnalyticData(date: date.AddMinutes(3), content: content);
-            AnalyticData analyticDataB = new AnalyticData(date: date.AddDays(3), content: content);
-            AnalyticData analyticDataC = new AnalyticData(date: date.AddHours(3), content: content);
+            AnalyticsDataDTO analyticDataA = new AnalyticsDataDTO(date: date.AddMinutes(3), content: content);
+            AnalyticsDataDTO analyticDataB = new AnalyticsDataDTO(date: date.AddDays(3), content: content);
+            AnalyticsDataDTO analyticDataC = new AnalyticsDataDTO(date: date.AddHours(3), content: content);
 
             Assert.NotEqual(analyticDataA, analyticDataB);
             Assert.NotEqual(analyticDataA, analyticDataC);

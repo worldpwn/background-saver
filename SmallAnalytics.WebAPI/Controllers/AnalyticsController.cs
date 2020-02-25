@@ -26,9 +26,9 @@ namespace SmallAnalytics.WebAPI.Controllers
         }
 
         [HttpPost]
-        public void Post()
+        public ActionResult Post(string data)
         {
-
+            return Ok();
         }
     }
 }
