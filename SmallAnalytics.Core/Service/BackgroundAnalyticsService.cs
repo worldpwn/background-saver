@@ -13,7 +13,6 @@ namespace SmallAnalytics.Core.Service
     public class BackgroundAnalyticsService : IBackgroundAnalyticsService, IHostedService, IDisposable
     {
         private static ConcurrentQueue<AnalyticsDataDTO> Queue = new ConcurrentQueue<AnalyticsDataDTO>();
-        private Timer? _timer;
 
         private readonly IRepository _repository;
         public BackgroundAnalyticsService(IRepository repository)
@@ -56,14 +55,11 @@ namespace SmallAnalytics.Core.Service
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _timer?.Change(Timeout.Infinite, 0);
-
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer?.Dispose();
             _repository.Dispose();
         }
     }
