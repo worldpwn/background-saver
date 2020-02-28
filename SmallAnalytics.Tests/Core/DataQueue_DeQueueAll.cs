@@ -29,17 +29,17 @@ namespace SmallAnalytics.Tests.Core
         [Fact]
         public void DeQueData_Should_ReturnElements()
         {
+            IDataQueue dataQueue = new DataQueue();
             int numberOfNewElements = 78;
             for (int i = 0; i < numberOfNewElements; i++)
             {
-                IDataQueue dataQueue = new DataQueue();
+             
                 string content = "some content";
 
                 dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
             }
 
-            IDataQueue actQueue = new DataQueue();
-            Assert.Equal(numberOfNewElements, actQueue.DeQueueAll().Count());
+            Assert.Equal(numberOfNewElements, dataQueue.DeQueueAll().Count());
         }
     }
 }

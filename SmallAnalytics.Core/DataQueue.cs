@@ -9,17 +9,17 @@ namespace SmallAnalytics.Core
 {
     public class DataQueue : IDataQueue
     {
-        private static ConcurrentQueue<AnalyticsDataDTO> Queue = new ConcurrentQueue<AnalyticsDataDTO>();
+        private ConcurrentQueue<AnalyticsDataDTO> Queue = new ConcurrentQueue<AnalyticsDataDTO>();
 
         public void AddToQueue(DateTimeOffset date, string content)
         {
-            DataQueue.Queue.Enqueue(new AnalyticsDataDTO(date, content));
+            this.Queue.Enqueue(new AnalyticsDataDTO(date, content));
         }
 
         public IEnumerable<AnalyticsDataDTO> DeQueueAll()
         {
             List<AnalyticsDataDTO> dataDTOs = new List<AnalyticsDataDTO>();
-            while (DataQueue.Queue.TryDequeue(out AnalyticsDataDTO item))
+            while (this.Queue.TryDequeue(out AnalyticsDataDTO item))
             {
                 dataDTOs.Add(item);
             }
@@ -28,7 +28,7 @@ namespace SmallAnalytics.Core
 
         public IReadOnlyList<AnalyticsDataDTO> ReadQueue()
         {
-            return DataQueue.Queue.ToList();
+            return this.Queue.ToList();
         }
     }
 }

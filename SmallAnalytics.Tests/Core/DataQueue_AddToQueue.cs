@@ -10,11 +10,6 @@ namespace SmallAnalytics.Tests.Core
 {
     public class DataQueue_AddToQueue
     {
-        public DataQueue_AddToQueue()
-        {
-            IDataQueue dataQueuePerTask = new DataQueue();
-            dataQueuePerTask.DeQueueAll();
-        }
 
         [Fact]
         public void AddData_Should_BeInQueue()
@@ -34,20 +29,21 @@ namespace SmallAnalytics.Tests.Core
             int numberOfThreads = 30000;
             Task[] tasks = new Task[numberOfThreads];
 
+            IDataQueue dataQueue = new DataQueue();
+
             for (int i = 0; i < tasks.Length; i++)
             {
          
                 tasks[i] = Task.Factory.StartNew(() =>
                     {
-                        IDataQueue dataQueuePerTask = new DataQueue();
+                        
                         string content = $"some content from thread {i}";
-                        dataQueuePerTask.AddToQueue(DateTimeOffset.UtcNow, content);
+                        dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
                     });
             }
 
             await Task.WhenAll(tasks);
 
-            IDataQueue dataQueue = new DataQueue();
             Assert.Equal(numberOfThreads, dataQueue.ReadQueue().Count);
         }
     }
