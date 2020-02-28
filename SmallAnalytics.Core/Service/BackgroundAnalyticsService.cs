@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmallAnalytics.Core.Service
 {
-    public class BackgroundAnalyticsService : IBackgroundAnalyticsService, IHostedService, IDisposable
+    public class BackgroundAnalyticsService : IBackgroundAnalyticsQueu, IHostedService, IDisposable
     {
         private static ConcurrentQueue<AnalyticsDataDTO> Queue = new ConcurrentQueue<AnalyticsDataDTO>();
 

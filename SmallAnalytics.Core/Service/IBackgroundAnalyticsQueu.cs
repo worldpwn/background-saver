@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmallAnalytics.Core.Service
 {
-    public interface IBackgroundAnalyticsService
+    public interface IBackgroundAnalyticsQueu
     {
         void StoreData(DateTimeOffset date, string content);
     }
