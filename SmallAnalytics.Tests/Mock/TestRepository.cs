@@ -10,19 +10,15 @@ namespace SmallAnalytics.Tests.Mock
     public class TestRepository : IRepository
     {
         public static List<AnalyticsDataDTO> _store = new List<AnalyticsDataDTO>();
-        public async Task AddAsync(AnalyticsDataDTO analyticsDataDTOs)
+
+        public async Task AddManyAndSaveAsync(IEnumerable<AnalyticsDataDTO> analyticsDataDTOs)
         {
-            await Task.Run(() => _store.Add(analyticsDataDTOs));
+            await Task.Run(() => _store.AddRange(analyticsDataDTOs));
         }
 
         public void Dispose()
         {
             Console.WriteLine("Disposing");
-        }
-
-        public async Task SaveChangeAsync()
-        {
-            await Task.Run(() => Console.WriteLine("Saving"));
         }
     }
 }

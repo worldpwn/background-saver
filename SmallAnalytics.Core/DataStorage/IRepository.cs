@@ -8,7 +8,6 @@ namespace SmallAnalytics.Core.DataStorage
 {
     public interface IRepository : IDisposable
     {
-        Task AddAsync(AnalyticsDataDTO analyticsDataDTOs);
-        Task SaveChangeAsync();
+        Task AddManyAndSaveAsync(IEnumerable<AnalyticsDataDTO> analyticsDataDTOs);
     }
 }

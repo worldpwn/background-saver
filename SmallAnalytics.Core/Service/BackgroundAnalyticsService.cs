@@ -46,11 +46,14 @@ namespace SmallAnalytics.Core.Service
 
         private async Task SaveQueueToDBAsync()
         {
+            if (BackgroundAnalyticsService.Queue.IsEmpty) return;
+
+            List<AnalyticsDataDTO> analyticsDataDTOs = new List<AnalyticsDataDTO>();
             while (BackgroundAnalyticsService.Queue.TryDequeue(out AnalyticsDataDTO item))
             {
-                await _repository.AddAsync(item);
+                analyticsDataDTOs.Add(item);
             }
-            await _repository.SaveChangeAsync();
+            await _repository.AddManyAndSaveAsync(analyticsDataDTOs);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)
