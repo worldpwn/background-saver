@@ -8,7 +8,7 @@ namespace SmallAnalytics.Core
     public interface IDataQueue
     {
         void AddToQueue(DateTimeOffset date, string content);
-        IReadOnlyList<AnalyticsDataDTO> DeQueueAll();
+        IEnumerable<AnalyticsDataDTO> DeQueueAll();
         IReadOnlyList<AnalyticsDataDTO> ReadQueue();
     }
 }

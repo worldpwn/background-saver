@@ -1,25 +1,34 @@
 ﻿using SmallAnalytics.Core.DTO;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SmallAnalytics.Core
 {
     public class DataQueue : IDataQueue
     {
+        private static ConcurrentQueue<AnalyticsDataDTO> Queue = new ConcurrentQueue<AnalyticsDataDTO>();
+
         public void AddToQueue(DateTimeOffset date, string content)
         {
-            throw new NotImplementedException();
+            DataQueue.Queue.Enqueue(new AnalyticsDataDTO(date, content));
         }
 
-        public IReadOnlyList<AnalyticsDataDTO> DeQueueAll()
+        public IEnumerable<AnalyticsDataDTO> DeQueueAll()
         {
-            throw new NotImplementedException();
+            List<AnalyticsDataDTO> dataDTOs = new List<AnalyticsDataDTO>();
+            while (DataQueue.Queue.TryDequeue(out AnalyticsDataDTO item))
+            {
+                dataDTOs.Add(item);
+            }
+            return dataDTOs;
         }
 
         public IReadOnlyList<AnalyticsDataDTO> ReadQueue()
         {
-            throw new NotImplementedException();
+            return DataQueue.Queue.ToList();
         }
     }
 }
