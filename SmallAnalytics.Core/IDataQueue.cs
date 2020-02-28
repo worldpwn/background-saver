@@ -9,5 +9,6 @@ namespace SmallAnalytics.Core
     {
         void AddToQueue(DateTimeOffset date, string content);
         IReadOnlyList<AnalyticsDataDTO> DeQueueAll();
+        IReadOnlyList<AnalyticsDataDTO> ReadQueue();
     }
 }
