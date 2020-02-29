@@ -11,6 +11,10 @@ namespace SmallAnalytics.Core
 {
     public class BackgroundDataSaveService : IHostedService
     {
+        // TODO:
+        // 1 - limited max queu size before save
+        // 2 - every fix time save
+
         private readonly IRepository _repository;
         private readonly IDataQueue _dataQueue;
         public BackgroundDataSaveService(
