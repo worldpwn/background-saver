@@ -28,21 +28,22 @@ namespace SmallAnalytics.Core
             this._dataQueue = dataQueue;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new Timer(
-                callback: () => await SaveAndEmtpyQueueAsync,
+                callback: async (e) => await SaveAndEmtpyQueueAsync(cancellationToken),
                 state: null,
                 dueTime: TimeSpan.Zero,
                 period: this.TimeBeforeSaves);
 
-            await Task.Delay(this.TimeBeforeSaves);
-            await SaveAndEmtpyQueueAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await SaveAndEmtpyQueueAsync(cancellationToken);
+            _timer?.Change(Timeout.Infinite, 0);
+            _timer?.Dispose();
         }
 
         private async Task SaveAndEmtpyQueueAsync(CancellationToken cancellationToken)
