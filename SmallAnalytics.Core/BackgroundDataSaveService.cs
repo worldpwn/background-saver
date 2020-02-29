@@ -11,12 +11,13 @@ namespace SmallAnalytics.Core
 {
     public class BackgroundDataSaveService : IHostedService
     {
-        // TODO:
-        // 1 - limited max queu size before save
-        // 2 - every fix time save
+        /// <summary>
+        /// Time span before each save of queue. Default value is 1 minute.
+        /// </summary>
+        public TimeSpan TimeBeforeSaves { get; set; } = TimeSpan.FromMinutes(1);
 
         private readonly IRepository _repository;
-        private readonly IDataQueue _dataQueue;
+        private readonly IDataQueue _dataQueue; 
         public BackgroundDataSaveService(
             IRepository repository,
             IDataQueue dataQueue)
@@ -25,12 +26,17 @@ namespace SmallAnalytics.Core
             this._dataQueue = dataQueue;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await SaveAndEmtpyQueueAsync(cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await SaveAndEmtpyQueueAsync(cancellationToken);
+        }
+
+        private async Task SaveAndEmtpyQueueAsync(CancellationToken cancellationToken)
         {
             IEnumerable<AnalyticsDataDTO> queue = _dataQueue.DeQueueAll();
             await _repository.AddManyAndSaveAsync(queue, cancellationToken);
