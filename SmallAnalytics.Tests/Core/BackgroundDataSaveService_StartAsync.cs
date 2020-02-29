@@ -31,5 +31,23 @@ namespace SmallAnalytics.Tests.Core
 
             Assert.NotEmpty(((TestRepository)repository).Store);
         }
+
+        [Fact]
+        public async Task OnStartWihtoutWaitTimeToSave_Should_NotSaveQueu()
+        {
+            // Arrange
+            TimeSpan timeToSave = TimeSpan.FromSeconds(3);
+            IDataQueue dataQueue = new DataQueue();
+            dataQueue.AddToQueue(DateTimeOffset.UtcNow, "some content");
+
+            IRepository repository = new TestRepository();
+            BackgroundDataSaveService backgroundDataSaveService = new BackgroundDataSaveService(repository, dataQueue) { TimeBeforeSaves = timeToSave };
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            // Act         
+            await backgroundDataSaveService.StartAsync(cts.Token);
+
+            Assert.Empty(((TestRepository)repository).Store);
+        }
     }
 }
