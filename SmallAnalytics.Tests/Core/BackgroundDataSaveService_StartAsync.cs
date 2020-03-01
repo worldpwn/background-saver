@@ -36,7 +36,7 @@ namespace SmallAnalytics.Tests.Core
         public async Task OnStartWihtoutWaitTimeToSave_Should_NotSaveQueue()
         {
             // Arrange
-            TimeSpan timeToSave = TimeSpan.FromSeconds(3);
+            TimeSpan timeToSave = TimeSpan.FromMinutes(30);
             IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
             dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
