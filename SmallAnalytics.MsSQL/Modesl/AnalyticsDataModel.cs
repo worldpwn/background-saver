@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SmallAnalytics.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SmallAnalytics.MsSQL.Modesl
 {
-    public class AnalyticsDataModel
+    public class AnalyticsDataModel : IData
     {
         public Guid Id { get; private set; }
         public DateTimeOffset Date { get; private set; }

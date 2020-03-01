@@ -6,6 +6,6 @@ namespace SmallAnalytics.Core.Models
 {
     public interface IData
     {
-        DateTimeOffset Date { get; }
+
     }
 }
