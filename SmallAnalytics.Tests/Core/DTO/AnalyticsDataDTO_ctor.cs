@@ -1,7 +1,5 @@
-﻿using SmallAnalytics.Core.DTO;
+﻿using SmallAnalytics.Tests.Mock;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace SmallAnalytics.Tests.Core.DTO
@@ -13,7 +11,7 @@ namespace SmallAnalytics.Tests.Core.DTO
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = "user registered";
-            AnalyticsDataDTO analyticsData = new AnalyticsDataDTO(date: date, content: content);
+            TestAnalyticsData analyticsData = new TestAnalyticsData(date: date, content: content);
 
             Assert.Equal(date, analyticsData.Date);
             Assert.Equal(content, analyticsData.Content);
@@ -24,7 +22,7 @@ namespace SmallAnalytics.Tests.Core.DTO
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = null;
-            Action action = () => new AnalyticsDataDTO(date: date, content: content);
+            Action action = () => new TestAnalyticsData(date: date, content: content);
 
             Assert.Throws<ArgumentNullException>(action);
         }
@@ -34,9 +32,9 @@ namespace SmallAnalytics.Tests.Core.DTO
         {
             DateTimeOffset date = DateTimeOffset.UtcNow;
             string content = "user registered";
-            AnalyticsDataDTO analyticDataA = new AnalyticsDataDTO(date: date.AddMinutes(3), content: content);
-            AnalyticsDataDTO analyticDataB = new AnalyticsDataDTO(date: date.AddDays(3), content: content);
-            AnalyticsDataDTO analyticDataC = new AnalyticsDataDTO(date: date.AddHours(3), content: content);
+            TestAnalyticsData analyticDataA = new TestAnalyticsData(date: date.AddMinutes(3), content: content);
+            TestAnalyticsData analyticDataB = new TestAnalyticsData(date: date.AddDays(3), content: content);
+            TestAnalyticsData analyticDataC = new TestAnalyticsData(date: date.AddHours(3), content: content);
 
             Assert.NotEqual(analyticDataA, analyticDataB);
             Assert.NotEqual(analyticDataA, analyticDataC);

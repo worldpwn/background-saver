@@ -17,11 +17,11 @@ namespace SmallAnalytics.Tests.Core
         {
             // Arrange
             TimeSpan timeToSave = TimeSpan.FromSeconds(3);
-            IDataQueue dataQueue = new DataQueue();
-            dataQueue.AddToQueue(DateTimeOffset.UtcNow, "some content");
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
+            dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
-            IRepository repository = new TestRepository();
-            BackgroundDataSaveService backgroundDataSaveService = new BackgroundDataSaveService(repository, dataQueue) { TimeBeforeSaves = timeToSave };
+            IRepository<TestAnalyticsData> repository = new TestRepository();
+            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(repository, dataQueue) { TimeBeforeSaves = timeToSave };
             CancellationTokenSource cts = new CancellationTokenSource();
 
             // Act         
@@ -36,12 +36,12 @@ namespace SmallAnalytics.Tests.Core
         public async Task OnStartWihtoutWaitTimeToSave_Should_NotSaveQueue()
         {
             // Arrange
-            TimeSpan timeToSave = TimeSpan.FromSeconds(3);
-            IDataQueue dataQueue = new DataQueue();
-            dataQueue.AddToQueue(DateTimeOffset.UtcNow, "some content");
+            TimeSpan timeToSave = TimeSpan.FromMinutes(30);
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
+            dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
-            IRepository repository = new TestRepository();
-            BackgroundDataSaveService backgroundDataSaveService = new BackgroundDataSaveService(repository, dataQueue) { TimeBeforeSaves = timeToSave };
+            IRepository<TestAnalyticsData> repository = new TestRepository();
+            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(repository, dataQueue) { TimeBeforeSaves = timeToSave };
             CancellationTokenSource cts = new CancellationTokenSource();
 
             // Act         
@@ -55,11 +55,11 @@ namespace SmallAnalytics.Tests.Core
         {
             // Arrange
             TimeSpan timeToSave = TimeSpan.FromSeconds(3);
-            IDataQueue dataQueue = new DataQueue();
-            dataQueue.AddToQueue(DateTimeOffset.UtcNow, "some content");
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
+            dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
-            IRepository repository = new TestRepository();
-            BackgroundDataSaveService backgroundDataSaveService = new BackgroundDataSaveService(repository, dataQueue) { TimeBeforeSaves = timeToSave };
+            IRepository<TestAnalyticsData> repository = new TestRepository();
+            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(repository, dataQueue) { TimeBeforeSaves = timeToSave };
             CancellationTokenSource cts = new CancellationTokenSource();
 
             // Act         

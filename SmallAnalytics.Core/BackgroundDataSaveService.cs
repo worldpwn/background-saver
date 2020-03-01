@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Hosting;
 using SmallAnalytics.Core.DataStorage;
-using SmallAnalytics.Core.DTO;
+using SmallAnalytics.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SmallAnalytics.Core
 {
-    public class BackgroundDataSaveService : IHostedService
+    public class BackgroundDataSaveService<TModel> : IHostedService where TModel : IData
     {
         /// <summary>
         /// Time span before each save of queue. Default value is 1 minute.
@@ -17,12 +16,12 @@ namespace SmallAnalytics.Core
         public TimeSpan TimeBeforeSaves { get; set; } = TimeSpan.FromMinutes(1);
         private Timer? _timer = null;
 
-        private readonly IRepository _repository;
-        private readonly IDataQueue _dataQueue;
-        
+        private readonly IRepository<TModel> _repository;
+        private readonly IDataQueue<TModel> _dataQueue;
+
         public BackgroundDataSaveService(
-            IRepository repository,
-            IDataQueue dataQueue)
+            IRepository<TModel> repository,
+            IDataQueue<TModel> dataQueue)
         {
             this._repository = repository;
             this._dataQueue = dataQueue;
@@ -48,7 +47,7 @@ namespace SmallAnalytics.Core
 
         private async Task SaveAndEmtpyQueueAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<AnalyticsDataDTO> queue = this._dataQueue.DeQueueAll();
+            IEnumerable<TModel> queue = this._dataQueue.DeQueueAll();
             await _repository.AddManyAndSaveAsync(queue, cancellationToken);
         }
     }
