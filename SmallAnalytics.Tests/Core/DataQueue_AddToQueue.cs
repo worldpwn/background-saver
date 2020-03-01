@@ -1,4 +1,5 @@
 ﻿using SmallAnalytics.Core;
+using SmallAnalytics.Tests.Mock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace SmallAnalytics.Tests.Core
         [Fact]
         public void AddData_Should_BeInQueue()
         {
-            IDataQueue dataQueue = new DataQueue();
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
             string content = "some content";
 
-            dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
+            dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, content));
 
             Assert.NotNull(dataQueue.ReadQueue().FirstOrDefault(d => d.Content == content));
         }
@@ -29,7 +30,7 @@ namespace SmallAnalytics.Tests.Core
             int numberOfThreads = 30000;
             Task[] tasks = new Task[numberOfThreads];
 
-            IDataQueue dataQueue = new DataQueue();
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
 
             for (int i = 0; i < tasks.Length; i++)
             {
@@ -38,7 +39,7 @@ namespace SmallAnalytics.Tests.Core
                     {
                         
                         string content = $"some content from thread {i}";
-                        dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
+                        dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, content));
                     });
             }
 

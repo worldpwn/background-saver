@@ -1,14 +1,12 @@
-﻿using SmallAnalytics.Core.DTO;
-using System;
+﻿using SmallAnalytics.Core.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SmallAnalytics.Core
 {
-    public interface IDataQueue
+    public interface IDataQueue<TModel> where TModel : IData
     {
-        void AddToQueue(DateTimeOffset date, string content);
-        IEnumerable<AnalyticsDataDTO> DeQueueAll();
-        IReadOnlyList<AnalyticsDataDTO> ReadQueue();
+        void AddToQueue(TModel data);
+        IEnumerable<TModel> DeQueueAll();
+        IReadOnlyList<TModel> ReadQueue();
     }
 }

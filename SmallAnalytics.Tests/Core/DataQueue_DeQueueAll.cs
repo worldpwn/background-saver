@@ -1,4 +1,5 @@
 ﻿using SmallAnalytics.Core;
+using SmallAnalytics.Tests.Mock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,13 @@ namespace SmallAnalytics.Tests.Core
         {
             for (int i = 0; i < 23; i++)
             {
-                IDataQueue dataQueue = new DataQueue();
+                IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
                 string content = "some content";
 
-                dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
+                dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, content));
             }
 
-            IDataQueue actQueue = new DataQueue();
+            IDataQueue<TestAnalyticsData> actQueue = new DataQueue<TestAnalyticsData>();
             actQueue.DeQueueAll();
 
             Assert.Empty(actQueue.ReadQueue());
@@ -29,14 +30,14 @@ namespace SmallAnalytics.Tests.Core
         [Fact]
         public void DeQueData_Should_ReturnElements()
         {
-            IDataQueue dataQueue = new DataQueue();
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
             int numberOfNewElements = 78;
             for (int i = 0; i < numberOfNewElements; i++)
             {
              
                 string content = "some content";
 
-                dataQueue.AddToQueue(DateTimeOffset.UtcNow, content);
+                dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, content));
             }
 
             Assert.Equal(numberOfNewElements, dataQueue.DeQueueAll().Count());

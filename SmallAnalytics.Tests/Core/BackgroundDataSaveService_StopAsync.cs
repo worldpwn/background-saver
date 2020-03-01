@@ -15,11 +15,11 @@ namespace SmallAnalytics.Tests.Core
         [Fact]
         public async Task BeforeStop_Should_AllQueuSavedInRepository()
         {
-            IDataQueue dataQueue = new DataQueue();
-            dataQueue.AddToQueue(DateTimeOffset.UtcNow, "some content");
+            IDataQueue<TestAnalyticsData> dataQueue = new DataQueue<TestAnalyticsData>();
+            dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
-            IRepository repository = new TestRepository();
-            BackgroundDataSaveService backgroundDataSaveService = new BackgroundDataSaveService(repository, dataQueue);
+            IRepository<TestAnalyticsData> repository = new TestRepository();
+            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(repository, dataQueue);
             CancellationTokenSource cts = new CancellationTokenSource();
 
             await backgroundDataSaveService.StopAsync(cts.Token);

@@ -1,18 +1,16 @@
 ﻿using SmallAnalytics.Core.DataStorage;
-using SmallAnalytics.Core.DTO;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SmallAnalytics.Tests.Mock
 {
-    public class TestRepository : IRepository
+    public class TestRepository : IRepository<TestAnalyticsData>
     {
-        public List<AnalyticsDataDTO> Store { get; private set; } = new List<AnalyticsDataDTO>();
+        public List<TestAnalyticsData> Store { get; private set; } = new List<TestAnalyticsData>();
 
-        public async Task AddManyAndSaveAsync(IEnumerable<AnalyticsDataDTO> analyticsDataDTOs, CancellationToken cancellationToken)
+        public async Task AddManyAndSaveAsync(IEnumerable<TestAnalyticsData> analyticsDataDTOs, CancellationToken cancellationToken)
         {
             await Task.Run(() => Store.AddRange(analyticsDataDTOs));
         }
