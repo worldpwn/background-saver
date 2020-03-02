@@ -23,7 +23,7 @@ namespace SmallAnalytics.Tests.Core
 
             IRepository<TestAnalyticsData> repository = new TestRepository();
             BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(
-                repository: repository,
+                serviceProvider: new TestDI(repository),
                 dataQueue: dataQueue,
                 logger: NullLogger< BackgroundDataSaveService<TestAnalyticsData>>.Instance) { TimeBeforeSaves = timeToSave };
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -46,7 +46,7 @@ namespace SmallAnalytics.Tests.Core
 
             IRepository<TestAnalyticsData> repository = new TestRepository();
             BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(
-                repository: repository, 
+                serviceProvider: new TestDI(repository),
                 dataQueue: dataQueue,
                 logger: NullLogger<BackgroundDataSaveService<TestAnalyticsData>>.Instance) { TimeBeforeSaves = timeToSave };
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -67,7 +67,7 @@ namespace SmallAnalytics.Tests.Core
 
             IRepository<TestAnalyticsData> repository = new TestRepository();
             BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(
-                repository: repository,
+                serviceProvider: new TestDI(repository),
                 dataQueue: dataQueue,
                 logger: NullLogger<BackgroundDataSaveService<TestAnalyticsData>>.Instance) { TimeBeforeSaves = timeToSave };
 
