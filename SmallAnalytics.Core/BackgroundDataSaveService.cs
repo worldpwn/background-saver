@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SmallAnalytics.Core.DataStorage;
 using SmallAnalytics.Core.Models;
 using System;
@@ -18,13 +19,15 @@ namespace SmallAnalytics.Core
 
         private readonly IRepository<TModel> _repository;
         private readonly IDataQueue<TModel> _dataQueue;
-
+        private readonly ILogger<BackgroundDataSaveService<TModel>> _logger;
         public BackgroundDataSaveService(
             IRepository<TModel> repository,
-            IDataQueue<TModel> dataQueue)
+            IDataQueue<TModel> dataQueue,
+            ILogger<BackgroundDataSaveService<TModel>> logger)
         {
             this._repository = repository;
             this._dataQueue = dataQueue;
+            this._logger = logger;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -47,8 +50,17 @@ namespace SmallAnalytics.Core
 
         private async Task SaveAndEmtpyQueueAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<TModel> queue = this._dataQueue.DeQueueAll();
-            await _repository.AddManyAndSaveAsync(queue, cancellationToken);
+            try
+            {
+                IEnumerable<TModel> queue = this._dataQueue.DeQueueAll();
+                await _repository.AddManyAndSaveAsync(queue, cancellationToken);
+                _logger.LogInformation("Queue has been saved.");
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, $"Error during execution of method {nameof(_repository.AddManyAndSaveAsync)}");
+            }
+
         }
     }
 }
