@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SmallAnalytics.Core.DataStorage;
 using SmallAnalytics.Core.Models;
 using System;
@@ -16,21 +18,23 @@ namespace SmallAnalytics.Core
         public TimeSpan TimeBeforeSaves { get; set; } = TimeSpan.FromMinutes(1);
         private Timer? _timer = null;
 
-        private readonly IRepository<TModel> _repository;
         private readonly IDataQueue<TModel> _dataQueue;
-
+        private readonly ILogger<BackgroundDataSaveService<TModel>> _logger;
+        private readonly IServiceProvider _serviceProvider;
         public BackgroundDataSaveService(
-            IRepository<TModel> repository,
-            IDataQueue<TModel> dataQueue)
+            IServiceProvider serviceProvider,
+            IDataQueue<TModel> dataQueue,
+            ILogger<BackgroundDataSaveService<TModel>> logger)
         {
-            this._repository = repository;
             this._dataQueue = dataQueue;
+            this._logger = logger;
+            this._serviceProvider = serviceProvider;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new Timer(
-                callback: async (e) => await SaveAndEmtpyQueueAsync(cancellationToken),
+                callback: async (e) => await SaveAndEmptyQueueAsync(cancellationToken),
                 state: null,
                 dueTime: TimeSpan.Zero,
                 period: this.TimeBeforeSaves);
@@ -40,15 +44,29 @@ namespace SmallAnalytics.Core
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await SaveAndEmtpyQueueAsync(cancellationToken);
+            await SaveAndEmptyQueueAsync(cancellationToken);
             _timer?.Change(Timeout.Infinite, 0);
             _timer?.Dispose();
         }
 
-        private async Task SaveAndEmtpyQueueAsync(CancellationToken cancellationToken)
+        private async Task SaveAndEmptyQueueAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<TModel> queue = this._dataQueue.DeQueueAll();
-            await _repository.AddManyAndSaveAsync(queue, cancellationToken);
+            try
+            {
+                using (IServiceScope scope = _serviceProvider.CreateScope()) 
+                {
+                    IRepository<TModel> repository = scope.ServiceProvider.GetRequiredService<IRepository<TModel>>();
+                    IEnumerable<TModel> queue = this._dataQueue.DeQueueAll();
+                    await repository.AddManyAndSaveAsync(queue, cancellationToken);
+                }
+
+                _logger.LogInformation("Queue has been saved.");
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, $"Error during execution of method {nameof(SaveAndEmptyQueueAsync)}");
+            }
+
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SmallAnalytics.Tests.Core
 {
@@ -19,7 +20,11 @@ namespace SmallAnalytics.Tests.Core
             dataQueue.AddToQueue(new TestAnalyticsData(DateTimeOffset.UtcNow, "some content"));
 
             IRepository<TestAnalyticsData> repository = new TestRepository();
-            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(repository, dataQueue);
+            BackgroundDataSaveService<TestAnalyticsData> backgroundDataSaveService = new BackgroundDataSaveService<TestAnalyticsData>(
+                serviceProvider: new TestDI(repository),
+                dataQueue: dataQueue,
+                logger: NullLogger<BackgroundDataSaveService<TestAnalyticsData>>.Instance);
+
             CancellationTokenSource cts = new CancellationTokenSource();
 
             await backgroundDataSaveService.StopAsync(cts.Token);

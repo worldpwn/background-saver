@@ -10,7 +10,10 @@ namespace SmallAnalytics.MsSQL
     {
         public DbSet<AnalyticsDataModel> AnalyticsDatas { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=blogging.db");
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
+
+        }
+
     }
 }
