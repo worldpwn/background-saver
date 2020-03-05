@@ -13,14 +13,14 @@ namespace SmallAnalytics.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AnalyticsController : ControllerBase
+    public class SampleController : ControllerBase
     {
 
-        private readonly ILogger<AnalyticsController> _logger;
+        private readonly ILogger<SampleController> _logger;
         private readonly Context _context;
         private readonly IDataQueue<AnalyticsDataModel> _queue;
-        public AnalyticsController(
-            ILogger<AnalyticsController> logger,
+        public SampleController(
+            ILogger<SampleController> logger,
             Context context,
             IDataQueue<AnalyticsDataModel> queue)
         {
